@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  pgbackup-dev-db:
+    image: postgres
+    restart: always
+    shm_size: 256mb
+    command: postgres -c 'max_connections=500' -N 500
+    env_file:
+      - .env.development
+
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'postgres']
+
+    volumes:
+    - ./db/dev/pg:/db
+
+    ports:
+    - 5433:5432
+
+  pgbackup:
+    image: pgbackup/dev
+    volumes:
+    - ./app:/app
+    
+    env_file:
+      - .env.development
