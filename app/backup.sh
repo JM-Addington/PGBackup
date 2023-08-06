@@ -11,4 +11,4 @@ file="$date-$POSTGRES_DB-backup.sql.gz.gpg"
 pg_dump -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB | \
     pigz -9 | 
     gpg --encrypt --recipient-file ./key \
-    > $file
+    > /backup/$file
