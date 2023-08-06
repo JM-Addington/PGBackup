@@ -9,7 +9,8 @@ RUN apt -y install dirmngr \
     gnupg2 \
     apt-transport-https \
     curl \
-    pigz
+    pigz \
+    pv
 
 RUN sleep 3s
 

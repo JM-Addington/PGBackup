@@ -8,7 +8,10 @@ rm key
 printf "$KEY" > key
 file="$date-$POSTGRES_DB-backup.sql.gz.gpg"
 
-pg_dump -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB | \
-    pigz -9 | 
+#pg_dump "dbname=$POSTGRES_DB user=$POSTGRES_USER host=$POSTGRES_HOST port=$POSTGRES_PORT sslmode=require"
+
+pg_dump -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB -p $POSTGRES_PORT | \
+    pv | \
+    pigz -9 | \
     gpg --encrypt --recipient-file ./key \
     > /backup/$file

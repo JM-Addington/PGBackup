@@ -1,5 +1,6 @@
 #!/bin/bash
 while true; do
+    /app/backup.sh	
     date
-    sleep 15
+    sleep 1h
 done
