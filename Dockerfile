@@ -8,7 +8,8 @@ RUN apt -y install dirmngr \
     gnupg \
     gnupg2 \
     apt-transport-https \
-    curl
+    curl \
+    pigz
 
 RUN sleep 3s
 
@@ -21,6 +22,6 @@ RUN sleep 3s
 
 RUN mkdir /app
 COPY app /app
-
+RUN cd /app && chmod +x *.sh
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]
