@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  pgbackup:
+    image: pgbackup/prod
+    volumes:
+    - ./backup:/backup
+
+    env_file:
+      - .env.production
