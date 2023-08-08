@@ -1,6 +1,6 @@
 # Rebuilds the docker image and restarts the container
 
-composefile="docker-compose-dev.yml"
+composefile="docker-compose-production.yml"
 tag="pgbackup/dev"
 dockerfile="Dockerfile"
 
