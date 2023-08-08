@@ -24,5 +24,6 @@ RUN sleep 3s
 RUN mkdir /app
 COPY app /app
 RUN cd /app && chmod +x *.sh
+WORKDIR /app
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]
