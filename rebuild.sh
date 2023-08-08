@@ -1,7 +1,7 @@
 # Rebuilds the docker image and restarts the container
 
 composefile="docker-compose-production.yml"
-tag="pgbackup/dev"
+tag="pgbackup/prod"
 dockerfile="Dockerfile"
 
 while [ "$#" -gt 0 ]; do
