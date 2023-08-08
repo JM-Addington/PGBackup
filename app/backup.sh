@@ -6,7 +6,7 @@ export PGPASSWORD=$POSTGRES_PASSWORD
 rm key
 
 printf "$KEY" > key
-file="$date-$POSTGRES_DB-backup.sql.gz.gpg"
+file="$date-$FRIENDLY_NAME-$POSTGRES_DB-backup.sql.gz.gpg"
 
 #pg_dump "dbname=$POSTGRES_DB user=$POSTGRES_USER host=$POSTGRES_HOST port=$POSTGRES_PORT sslmode=require"
 
