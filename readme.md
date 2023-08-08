@@ -12,6 +12,7 @@ POSTGRES_PORT=5432
 POSTGRES_DB=testdb
 POSTGRES_USER=pgbackup
 POSTGRES_PASSWORD=pgbackup
+FRIENDLY_NAME=devdatabase
 KEY="
 pgpkey
 ...
@@ -22,6 +23,8 @@ For example, if you back up both a development and production database, each wou
 own env file.
 
 PGPKey needs to be an actual, public, PGP key. Everything will be encrypted with this key.
+
+`FRIENDLY_NAME` is optional. If set, it will be added to the backup filename. 
 
 ## Docker Compose
 Edit your docker-compose file to create a service for each database backup configuration you
@@ -34,10 +37,7 @@ services:
     image: pgbackup/prod
     volumes:
     - ./backup:/backup
-    
-    environment:
-      -FRIENDLY_NAME: production
-
+  
     env_file:
       - .env.production
 
@@ -45,14 +45,9 @@ services:
     image: pgbackup/prod
     volumes:
     - ./backup:/backup
-      
-    environment:
-      -FRIENDLY_NAME: production
 
     env_file:
       - .env.production
 ```
 `volumes` should be a single bind mount that points to the local directory OUTSIDE of the container
 where you want to store your backups.
-
-`FRIENDLY_NAME` is optional. If set, it will be added to the backup filename. 
