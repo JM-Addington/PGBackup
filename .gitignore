@@ -1,2 +1,4 @@
 /backup/
-/.env.development
+.env*
+.idea/
+.DS_STORE
