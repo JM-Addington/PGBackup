@@ -2,5 +2,5 @@
 while true; do
     /app/backup.sh	
     date
-    sleep 1h
+    sleep 24h
 done
