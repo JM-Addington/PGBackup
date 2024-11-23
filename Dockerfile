@@ -10,8 +10,8 @@ RUN apt -y install dirmngr \
     apt-transport-https \
     curl \
     pigz \
-    pv
-
+    cron 
+    
 RUN sleep 3s
 
 RUN curl -fSsL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /usr/share/keyrings/postgresql.gpg > /dev/null
