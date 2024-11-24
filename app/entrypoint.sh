@@ -5,7 +5,7 @@ if [ -z "$PG_VERSION" ]; then
 fi
 
 # Install the specified PG version
-apt install -y postgresql-client-$PG_VERSION
+apt install -y "postgresql-client-$PG_VERSION"
 
 # Run backup on initial launch if ENABLE_INITIAL_BACKUP is set to true
 if [ "$ENABLE_INITIAL_BACKUP" = "true" ]; then
