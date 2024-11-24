@@ -29,7 +29,6 @@ if [ "$ENABLE_GPG" = "true" ]; then
     chmod 600 key
 
     pg_dump --verbose -h $POSTGRES_HOST -U $POSTGRES_USER -d $POSTGRES_DB -p $POSTGRES_PORT | \
-        pv | \
         pigz -7 | \
         gpg --encrypt --recipient-file ./key \
         > "$OUTPUT_DIR/${OUTPUT_NAME}.gpg"
