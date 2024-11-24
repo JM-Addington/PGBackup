@@ -30,6 +30,7 @@ KEY="
 pgpkey
 ...
 "
+POSTBACKUPSCRIPT="/scripts/post-backup.sh"
 ```
 
 For example, if you back up both a development and production database, each would have their
@@ -49,6 +50,9 @@ own env file.
 ever touch the disk.** The backup is piped to gzip, then to gpg, then to the mounted volume.
 
 PGPKey needs to be an actual, public, PGP key. Everything will be encrypted with this key.
+
+`POSTBACKUPSCRIPT` is optional. If set, the script will be run after the backup completes __successfully__. The first and only argument to the script will be the full path to the backup file. A sample script is included in the `scripts` directory.
+- You can add your own scripts to the `scripts` directory and mount them to the container at `/scripts` to use them.
 
 ## Docker Compose
 Edit your docker-compose file to create a service for each database backup configuration you
