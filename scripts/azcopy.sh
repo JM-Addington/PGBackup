@@ -1,3 +1,4 @@
+#!/bin/bash
 # Download 64-bit version of AzCopy if on x86_64 architecture
 # https://aka.ms/downloadazcopy-v10-linux
 
