@@ -97,7 +97,7 @@ try:
     if cron_schedule:
         subprocess.run(["tail", "-f", "/var/log/cron.log"], check=True)
 
-    else:
+    elif not enable_initial_backup:
         logger.info("No CRON_SCHEDULE set. Running one-time backup...")
         subprocess.run(backup_command, check=True)
         logger.info("Backup complete. Exiting.")
