@@ -9,6 +9,11 @@ logger = logging.getLogger(__name__)
 
 PG_VERSION = os.getenv("PG_VERSION", "16")
 
+# If /scripts exists chmod +xr-w all files in it
+if os.path.exists("/scripts"):
+    for file in os.listdir("/scripts"):
+        os.chmod(f"/scripts/{file}", 0o555)
+
 try:
     subprocess.run(["apt", "install", "-y", f"postgresql-client-{PG_VERSION}"], check=True)
 except subprocess.CalledProcessError as e:
