@@ -35,7 +35,7 @@ def main():
 
             with subprocess.Popen(pg_dump_cmd, stdout=subprocess.PIPE) as pg_dump_proc:
                 with subprocess.Popen(pigz_cmd, stdin=pg_dump_proc.stdout, stdout=subprocess.PIPE) as pigz_proc:
-                    with open(output_path + ".gpg", "wb") as output_file:
+                    with open(output_path + ".sql.gz.gpg", "wb") as output_file:
                         subprocess.run(gpg_cmd, stdin=pigz_proc.stdout, stdout=output_file, check=True)
 
             logger.info("Backup complete with GPG encryption!")
