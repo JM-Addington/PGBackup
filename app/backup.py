@@ -37,7 +37,7 @@ def main():
                         subprocess.run(gpg_cmd, stdin=pigz_proc.stdout, stdout=output_file, check=True)
 
             logger.info("Backup complete with GPG encryption!")
-            backup_file = output_path + ".gpg"
+            backup_file = output_path + ".sql.gz.gpg"
         else:
             pg_dump_cmd = [
                 "pg_dump", "--verbose", "-h", args.host, "-U", args.user, "-d", args.db, "-p", args.port
