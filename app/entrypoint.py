@@ -46,6 +46,12 @@ try:
     if os.getenv("ENABLE_GPG", "false").lower() == "true":
         backup_command.append("--encrypt")
         
+    # Set UID and GID if provided
+    if os.getenv("UID"):
+        backup_command.extend(["--uid", os.getenv("UID")])
+    if os.getenv("GID"):
+        backup_command.extend(["--gid", os.getenv("GID")])
+        
     # Set GPG key if provided
     if os.getenv("KEY"):
         with open("/app/key", "w") as key_file:

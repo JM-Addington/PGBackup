@@ -1,6 +1,5 @@
 # Overview
-This is a super simple project: it creates a docker image that will automatically
-back up a postgres database to a mounted volume.
+This project creates a Docker image that automatically backs up a PostgreSQL database to a mounted volume.
 
 ## Why?
 Because I regularly need to back up databases where I already have all of the credentials stored in environment variables. Copying and pasting the values is redundant and error-prone. 
@@ -25,6 +24,8 @@ OUTPUT_DIR="/backup"
 OUTPUT_NAME="${POSTGRES_DB}-backup-${date}.sql.gz.gpg"
 FRIENDLY_NAME=devdatabase
 ENABLE_INITIAL_BACKUP=true
+UID=1000
+GID=1000
 ENABLE_GPG=true
 KEY="
 pgpkey
@@ -45,6 +46,8 @@ own env file.
 `FRIENDLY_NAME` is optional. If set, it will be added to the backup filename. 
 
 `ENABLE_INITIAL_BACKUP` is optional. If set to `true`, a backup will run as soon as the container starts, not just on the schedule. _If `CRON_SCHEDULE` is not set, this will be ignored and the backup will run once when the container starts._
+
+`UID` and `GID` are optional. If set, the backup will be owned by the specified user and group. Useful if you are mounting a volume that is owned by a different user. (i.e., with docker-compose, the container is owned by root, but you want to be able to access it from your user account.)
 
 `ENABLE_GPG` is optional. If set to `true`, the backup will be encrypted with the PGP key. **When encryption is enabled no plaintext backup will
 ever touch the disk.** The backup is piped to gzip, then to gpg, then to the mounted volume.

@@ -14,6 +14,8 @@ def main():
     parser.add_argument("--output", required=True, help="Output path for the backup file")
     parser.add_argument("--encrypt", action="store_true", help="Enable GPG encryption")
     parser.add_argument("--post-backup-script", help="Path to the post-backup script")
+    parser.add_argument("--uid", type=int, help="UID for the backup file")
+    parser.add_argument("--gid", type=int, help="GID for the backup file")
     args = parser.parse_args()
 
     output_path = args.output
@@ -50,6 +52,10 @@ def main():
 
             logger.info("Backup complete without encryption!")
             backup_file = output_path + ".sql.gz"
+
+        if args.uid is not None and args.gid is not None:
+            os.chown(backup_file, args.uid, args.gid)
+            logger.info(f"Backup file ownership set to UID: {args.uid}, GID: {args.gid}")
 
         if args.post_backup_script:
             subprocess.run([args.post_backup_script, backup_file], check=True)
