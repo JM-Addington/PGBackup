@@ -29,9 +29,8 @@ try:
     
     # Set backup name
     friendly_name = os.getenv("FRIENDLY_NAME", os.getenv("POSTGRES_DB"))
-    date_string = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
     output_dir = os.getenv("OUTPUT_DIR", "/backup")
-    output_path = f"/{output_dir}/{friendly_name}_{date_string}"
+    output_path = f"/{output_dir}/{friendly_name}"
     
     enable_initial_backup = os.getenv("ENABLE_INITIAL_BACKUP", "false").lower() == "true"
     backup_command = ["python3", "/app/backup.py"]

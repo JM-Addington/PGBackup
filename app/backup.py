@@ -2,6 +2,7 @@ import subprocess
 import argparse
 import logging
 import os
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -17,8 +18,10 @@ def main():
     parser.add_argument("--uid", type=int, help="UID for the backup file")
     parser.add_argument("--gid", type=int, help="GID for the backup file")
     args = parser.parse_args()
-
-    output_path = args.output
+    
+    # Get the current datetime and format it
+    current_datetime = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+    output_path = f"{current_datetime}-{args.output}"
 
     try:
         if args.encrypt:
