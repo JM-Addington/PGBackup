@@ -117,7 +117,8 @@ try:
             os.chmod("/etc/cron.d/backup-cron", 0o644)
             subprocess.run(["crontab", "/etc/cron.d/backup-cron"], check=True)
             open("/var/log/cron.log", "a").close()
-            subprocess.run(["cron"], check=True)
+            subprocess.run(["cron"])
+            logger.info("Cron job set up and cron service started.")
             
         except subprocess.CalledProcessError as e:
             logger.error(f"Failed to set up cron job or start cron service: {e}")
@@ -143,7 +144,7 @@ try:
     # If CRON_SCHEDULE is set watch for the /app/run file and run the backup
     # It is set up this way because cron can't access the environment variables
     if cron_schedule:
-      
+        logger.info("Watching for /app/run file...")
         while True:  
             # Check to see if /app/run exists
             if os.path.exists("/app/run"):
@@ -161,10 +162,6 @@ try:
         logger.info("No CRON_SCHEDULE set. Running one-time backup...")
         subprocess.run(backup_command, check=True)
         logger.info("Backup complete. Exiting.")
-        
-except subprocess.CalledProcessError as e:
-    logger.error(f"Failed to run backup or set up cron job: {e}")
-    exit(1)
     
 except Exception as e:
     logger.error(f"An unexpected error occurred: {e}")
