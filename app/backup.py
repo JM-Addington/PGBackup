@@ -40,9 +40,8 @@ def main():
     parser.add_argument("--gid", type=int, help="GID for the backup file")
     args = parser.parse_args()
     
-    # # Get the current datetime and format it
+    # Get the current datetime and format it
     current_datetime = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-    # output_path = f"{args.output}-{current_datetime}"
     
     # Prefix the filename with the current date by splitting the output path and inserting the current datetime
     split_path = args.output.split("/")
