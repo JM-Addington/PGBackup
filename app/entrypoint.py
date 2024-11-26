@@ -6,7 +6,7 @@ import time
 
 print("Welcome to the entrypoint script!")
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("PGBackup")
 logger.setLevel(logging.INFO)
 
 # Create handlers
@@ -19,7 +19,7 @@ if not os.path.exists(log_dir):
 file_handler = logging.FileHandler('/var/log/pgbackup.log')
 
 # Create formatters and add them to handlers
-formatter = logging.Formatter('[PGBACKUP] %(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter('[PGBACKUP] %(asctime)s - %(levelname)s - %(message)s')
 console_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
 
@@ -145,9 +145,10 @@ try:
     # It is set up this way because cron can't access the environment variables
     if cron_schedule:
         logger.info("Watching for /app/run file...")
-        while True:  
+        while 1==1:  
             # Check to see if /app/run exists
             if os.path.exists("/app/run"):
+                logger.info("/app/run file found. Running backup...")
                 os.remove("/app/run")
                 try:
                     subprocess.run(backup_command, check=True)
