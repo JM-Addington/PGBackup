@@ -167,3 +167,7 @@ services:
 networks:
   internal:
 ```
+
+## Updates
+If my Github action is set up correctly the image should be built and pushed to Docker Hub automatically on
+a weekly basis. The dockerfile builds remote_syslog2 from source and updates all packages to the latest version.
