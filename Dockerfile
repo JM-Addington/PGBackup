@@ -1,16 +1,18 @@
-FROM ubuntu:22.04
+FROM debian:trixie-slim
 
 # Install dependencies
 RUN apt update
+RUN apt dist-upgrade -y
 RUN apt -y install dirmngr \
     ca-certificates \
-    software-properties-common \
     gnupg \
     gnupg2 \
     apt-transport-https \
     curl \
     wget \
     pigz \
+    python3 \
+    vim \
     cron 
 
 RUN curl -fSsL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | tee /usr/share/keyrings/postgresql.gpg > /dev/null
