@@ -1,12 +1,18 @@
 services:
   pgbackup-prod:
-    image: pgbackup/prod
+    image: pgbackup
     volumes:
     - ./backup:/backup
+    - ./scripts:/scripts
+    - ./logs/:/var/log/
 
     env_file:
       - .env.production
+      - .env.production-backup
 
+    environment:
+      OUTPUT_DIR: "/backup"
+      
   pgbackup-dev:
     image: pgbackup/prod
     volumes:
