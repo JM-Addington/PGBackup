@@ -2,11 +2,13 @@
 This project creates a Docker image that automatically backs up a PostgreSQL database to a mounted volume.
 
 ## Why?
-Because I regularly need to back up databases where I already have all of the credentials stored in environment variables. Copying and pasting the values is redundant and error-prone. 
+Because I regularly need to back up databases where I already have all of the credentials stored in environment variables. Copying and pasting the values is redundant and error-prone. And backups were just one
+more place to rotate crednetials.
 
 I was also tired of fighting dbeaver to have the _exact_ correct pg_dump version installed on my machine.
 
-This way, I can just set up a new service in my docker-compose file and be done with it, either locally during development or in production.
+This way, I can just set up a new service in my docker-compose file and be done with it, either locally during development or in production. The same secrets are used for the production database and the backup, and the
+same docker-compose file can be moved across hosts with minimal changes.
 
 # Usage
 ## Environment Variables
@@ -109,4 +111,59 @@ services:
         pgpkey
         ...
         "
+```
+## Real Life Example
+Here is a docker compose file that I use to run a production service. It uses
+PGBackup for backup and remote_syslog2-docker for logging pgbackup (the production service) has
+its own logging built in.
+```yaml
+services:
+  AMS-Worker:
+    image: myregistry.io/image:latest
+    build: .
+    env_file: .env.production
+    restart: always
+
+    networks:
+        - internal
+
+       watchtower:
+         image: containrrr/watchtower
+         volumes:
+           - /var/run/docker.sock:/var/run/docker.sock
+         command: --interval 3600
+
+  backup:
+    image: ghcr.io/jm-addington/pgbackup:latest
+    env_file: .env.production
+    restart: always
+    environment:
+      CRON_SCHEDULE: "0 20 * * *"
+      PG_VERSION: 15
+      ENABLE_GPG: true
+      ENABLE_INITIAL_BACKUP: true
+      POSTBACKUPSCRIPT: "/scripts/azcopy.sh"
+      AZCOPY: "************"
+      OUTPUT_DIR: /backups
+      KEY: |
+        -----BEGIN PGP PUBLIC KEY BLOCK-----
+        ...
+        -----END PGP PUBLIC KEY BLOCK-----
+    volumes:
+        volumes:
+      - /var/ams_backups:/backups/
+      - ./logs/:/var/log/
+
+  logging:
+    image: ghcr.io/jmaddington/remote_syslog2-docker:latest
+    command: ["/usr/local/bin/remote_syslog2", "-D", "--configfile", "/etc/rsyslog.yml"]
+
+    volumes:
+      - ./rsyslog.yml:/etc/rsyslog.yml
+      - ./logs:/var/log/
+
+    restart: always
+
+networks:
+  internal:
 ```
