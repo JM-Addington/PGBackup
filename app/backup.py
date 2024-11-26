@@ -4,7 +4,9 @@ import logging
 import os
 from datetime import datetime
 
-logger = logging.getLogger(__name__)
+stderr_log_file = open('/var/log/pgbackup.log', 'a')
+
+logger = logging.getLogger("PGBackup")
 logger.setLevel(logging.INFO)
 
 # Create handlers
@@ -17,7 +19,7 @@ if not os.path.exists(log_dir):
 file_handler = logging.FileHandler('/var/log/pgbackup.log')
 
 # Create formatters and add them to handlers
-formatter = logging.Formatter('[PGBACKUP] %(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter('[PGBACKUP] %(asctime)s - %(levelname)s - %(message)s')
 console_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
 
@@ -60,10 +62,10 @@ def main():
             pigz_cmd = ["pigz", "-7"]
             gpg_cmd = ["gpg", "--encrypt", "--recipient-file", "key"]
 
-            with subprocess.Popen(pg_dump_cmd, stdout=subprocess.PIPE) as pg_dump_proc:
-                with subprocess.Popen(pigz_cmd, stdin=pg_dump_proc.stdout, stdout=subprocess.PIPE) as pigz_proc:
+            with subprocess.Popen(pg_dump_cmd, stdout=subprocess.PIPE, stderr=stderr_log_file) as pg_dump_proc:
+                with subprocess.Popen(pigz_cmd, stdin=pg_dump_proc.stdout, stdout=subprocess.PIPE, stderr=stderr_log_file) as pigz_proc:
                     with open(output_path + ".sql.gz.gpg", "wb") as output_file:
-                        subprocess.run(gpg_cmd, stdin=pigz_proc.stdout, stdout=output_file, check=True)
+                        subprocess.run(gpg_cmd, stdin=pigz_proc.stdout, stdout=output_file,  stderr=stderr_log_file, check=True)
 
             logger.info("Backup complete with GPG encryption!")
             backup_file = output_path + ".sql.gz.gpg"
@@ -73,9 +75,9 @@ def main():
             ]
             pigz_cmd = ["pigz", "-7"]
 
-            with subprocess.Popen(pg_dump_cmd, stdout=subprocess.PIPE) as pg_dump_proc:
+            with subprocess.Popen(pg_dump_cmd, stdout=subprocess.PIPE, stderr=stderr_log_file) as pg_dump_proc:
                 with open(output_path, "wb") as output_file:
-                    subprocess.run(pigz_cmd, stdin=pg_dump_proc.stdout, stdout=output_file, check=True)
+                    subprocess.run(pigz_cmd, stdin=pg_dump_proc.stdout, stdout=output_file, stderr=stderr_log_file, check=True)
 
             logger.info("Backup complete without encryption!")
             backup_file = output_path + ".sql.gz"
@@ -85,7 +87,7 @@ def main():
             logger.info(f"Backup file ownership set to UID: {args.uid}, GID: {args.gid}")
 
         if args.post_backup_script:
-            subprocess.run([args.post_backup_script, backup_file], check=True)
+            subprocess.run([args.post_backup_script, backup_file],stderr=stderr_log_file, stdout=stderr_log_file, check=True)
             logger.info("Post-backup script executed successfully!")
 
     except subprocess.CalledProcessError as e:
