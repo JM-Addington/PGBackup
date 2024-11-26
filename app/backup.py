@@ -5,6 +5,25 @@ import os
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# Create handlers
+console_handler = logging.StreamHandler()
+
+# Ensure the log directory exists
+log_dir = os.path.dirname('/var/log/pgbackup.log')
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
+file_handler = logging.FileHandler('/var/log/pgbackup.log')
+
+# Create formatters and add them to handlers
+formatter = logging.Formatter('[PGBACKUP] %(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(formatter)
+file_handler.setFormatter(formatter)
+
+# Add handlers to the logger
+logger.addHandler(console_handler)
+logger.addHandler(file_handler)
 
 def main():
     parser = argparse.ArgumentParser(description="Backup script with optional GPG encryption and post-backup script.")
@@ -19,9 +38,14 @@ def main():
     parser.add_argument("--gid", type=int, help="GID for the backup file")
     args = parser.parse_args()
     
-    # Get the current datetime and format it
+    # # Get the current datetime and format it
     current_datetime = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-    output_path = f"{current_datetime}-{args.output}"
+    # output_path = f"{args.output}-{current_datetime}"
+    
+    # Prefix the filename with the current date by splitting the output path and inserting the current datetime
+    split_path = args.output.split("/")
+    split_path[-1] = f"{current_datetime}-{split_path[-1]}"
+    output_path = "/".join(split_path)
 
     try:
         if args.encrypt:
