@@ -48,6 +48,8 @@ def main():
     split_path = args.output.split("/")
     split_path[-1] = f"{current_datetime}-{split_path[-1]}"
     output_path = "/".join(split_path)
+    
+    logger.info(f"Starting backup for database {args.db} on host {args.host} to {output_path}...")
 
     try:
         if args.encrypt:
