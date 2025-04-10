@@ -46,13 +46,13 @@ if args.cron == False:
             os.chmod(f"/scripts/{file}", 0o555)
 
     try:
-        logger.info("Installing PostgreSQL client...")
+        logger.info(f"Installing PostgreSQL client version {PG_VERSION}...")
         subprocess.run(["apt", "install", "-y", f"postgresql-client-{PG_VERSION}"], check=True)
     except subprocess.CalledProcessError as e:
-        logger.error(f"Failed to install PostgreSQL client: {e}")
+        logger.error(f"Failed to install PostgreSQL {PG_VERSION} client: {e}")
         exit(1)
     except Exception as e:
-        logger.error(f"An unexpected error occurred during PostgreSQL client installation: {e}")
+        logger.error(f"An unexpected error occurred during PostgreSQL {PG_VERSION} client installation: {e}")
         exit(1)
 
 try:
