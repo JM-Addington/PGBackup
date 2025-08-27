@@ -46,6 +46,8 @@ if args.cron == False:
             os.chmod(f"/scripts/{file}", 0o555)
 
     try:
+        logger.info("Updating apt package lists...")
+        subprocess.run(["apt", "update"], check=True)
         logger.info(f"Installing PostgreSQL client version {PG_VERSION}...")
         subprocess.run(["apt", "install", "-y", f"postgresql-client-{PG_VERSION}"], check=True)
     except subprocess.CalledProcessError as e:
