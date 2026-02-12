@@ -26,7 +26,7 @@ fi
 ./azcopy copy "$1" "$AZCOPY"
 UPLOAD_EXIT_CODE=$?
 
-if [ $UPLOAD_EXIT_CODE -ne 0 ]; then
+if [ "$UPLOAD_EXIT_CODE" -ne 0 ]; then
     echo "ERROR: azcopy upload failed with exit code $UPLOAD_EXIT_CODE. Local file NOT deleted. [AZ-UPLOAD-FAIL]"
     exit $UPLOAD_EXIT_CODE
 fi
